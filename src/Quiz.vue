@@ -238,12 +238,11 @@
   .progress-button:hover {
     background-color: #95A5A6 !important;
     color: #fff !important;
-    border: none;
   }
 
   .progress-button-active {
     background-color: #000 !important;
-    border: none;
+    border-color: #fff;
     border-radius: 25%;
     color: #fff;
   }
@@ -251,13 +250,11 @@
   .progress-button-selected {
     background-color: #555;
     color: #fff;
-    border: none;
+    border-color: #fff;
   }
 
   .progress-button-missed {
     background-color: #BDC3C7;
-    border: none;
-    color: #fff;
   }
 
   .progress-bar {
