@@ -50,7 +50,8 @@
         fullscreenLoading: false,
         submitting: false,
         transition: 'next-question',
-        isAnswered: false
+        isAnswered: false,
+        isLastQuestionCorrect: true
       }
     },
     components: {
@@ -78,46 +79,57 @@
     },
     methods: {
       next() {
-        if (this.isNextAvailable) {
-          if (this.$store.state.answer[this.$store.state.questionNumber] == this.$store.state.quiz[this.$store.state.questionNumber].answer) {
-            this.nextQuestion()
-          } else {
-            this.$confirm(this.$store.state.quiz[this.$store.state.questionNumber].explanation, '正确答案：' +
-              this.$store.state.quiz[this.$store.state.questionNumber].answer, {
-              confirmButtonText: '下一题',
-              cancelButtonText: '我再看看',
-              type: 'info'
-            }).then(() => {
-              this.nextQuestion()
-            }).catch(() => {})
-          }
+        if (this.$store.state.answer[this.$store.state.questionNumber] === this.$store.state.quiz[this.$store.state.questionNumber].answer) {
+          this.nextQuestion()
         } else {
-          this.$confirm(this.submitConfirmationText(), '确认提交', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: this.unansweredQuestion().length === 0 ? 'success' : 'warning'
+          this.$confirm(this.$store.state.quiz[this.$store.state.questionNumber].explanation, '正确答案：' +
+            this.$store.state.quiz[this.$store.state.questionNumber].answer, {
+            confirmButtonText: this.isNextAvailable ? '下一题' : '完成答题',
+            cancelButtonText: '我再看看',
+            type: 'info'
           }).then(() => {
-            this.submitting = true;
-            this.fullscreenLoading = true;
-            setTimeout(() => {
-              this.fullscreenLoading = false;
-              this.$router.push('/result');
-            }, 1000);
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消提交'
-            });
-          });
+            this.isLastQuestionCorrect = false
+            this.nextQuestion()
+          }).catch(() => {})
         }
       },
       nextQuestion() {
-        this.isLoading = true;
-        this.transition = 'next-question';
-        this.$store.commit('nextQuestion');
-        this.$router.push('/' + (this.$store.state.questionNumber + 1));
-        this.updateAnswerStatus()
-        setTimeout(() => { this.isLoading = false }, 400);
+        if (this.isNextAvailable) {
+          this.isLoading = true;
+          this.transition = 'next-question';
+          this.$store.commit('nextQuestion');
+          this.$router.push('/' + (this.$store.state.questionNumber + 1));
+          this.updateAnswerStatus()
+          setTimeout(() => {
+            this.isLoading = false
+          }, 400);
+        } else {
+          let submit = () => {
+            this.$confirm(this.submitConfirmationText(), '您已到最后一题，确定提交？', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: this.unansweredQuestion().length === 0 ? 'success' : 'warning'
+            }).then(() => {
+              this.submitting = true;
+              this.fullscreenLoading = true;
+              setTimeout(() => {
+                this.fullscreenLoading = false;
+                this.$router.push('/result');
+              }, 1000);
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消提交'
+              });
+            });
+          }
+          if (this.isLastQuestionCorrect) {
+            submit()
+          } else {
+            this.isLastQuestionCorrect = true
+            setTimeout(submit, 400)
+          }
+        }
       },
       last() {
         this.isLoading = true;
