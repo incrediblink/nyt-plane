@@ -17,6 +17,7 @@
     "eslint-plugin-jasmine": "^2.2.0",
     "eslint-plugin-vue": "^2.0.1",
     "vue": "^2.1.8",
+    "vue-analytics": "^4.0.0",
     "vue-chartjs": "^2.6.0",
     "vue-router": "^2.4.0",
     "vuex": "^2.3.0"

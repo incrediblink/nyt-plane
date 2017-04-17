@@ -3,6 +3,7 @@ import ElementUI from 'element-ui'
 import './assets/index.css'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
+import VueAnalytics from 'vue-analytics'
 
 import App from './App.vue'
 import Quiz from './Quiz.vue'
@@ -42,6 +43,10 @@ const router = new VueRouter({
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(VueAnalytics, {
+  id: 'UA-97492227-1',
+  router
+})
 
 const store = new Vuex.Store(storeInfo)
 
