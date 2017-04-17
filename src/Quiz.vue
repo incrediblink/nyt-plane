@@ -11,7 +11,9 @@
 
     <div class="buttons">
       <div class="button-left">
-        <el-button type="primary" icon="arrow-left" @click="last" :disabled="isLoading || !isLastAvailable">
+        <el-button type="primary" icon="arrow-left" @click="last"
+                   :disabled="isLoading" :class="isLastAvailable ? '' : 'displayNone'"
+        >
           上一问
         </el-button>
       </div>
@@ -270,7 +272,8 @@
   }
 
   .router-view {
-    display: block;
+    display: flex;
+    justify-content: center;
   }
 
   .transition {
@@ -311,6 +314,11 @@
     animation-duration: .25s;
     animation-name: slide-out-rightward;
     opacity: 0;
+  }
+
+  .displayNone {
+    opacity: 0;
+    visibility: hidden;
   }
 
   @media(max-width: 768px) {
